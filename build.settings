@@ -1,0 +1,26 @@
+settings = {
+	orientation = {
+		default = "portrait",
+		supported = { "portrait", "portraitUpsideDown" }
+	},
+	
+	iphone = {
+		plist = {
+			UIBackgroundModes = {"remote-notification"},
+			UIStatusBarHidden = false,
+			UIPrerenderedIcon = true, -- set to false for "shine" overlay
+		}
+	},
+	
+	plugins = {
+    ["plugin.OneSignal"] =
+    {
+        publisherId = "com.onesignal"
+    },
+		["plugin.google.play.services"] =
+		{
+			publisherId = "com.coronalabs",
+			supportedPlatforms = { android=true, ["android-kindle"]=true }
+		},
+  },
+}
