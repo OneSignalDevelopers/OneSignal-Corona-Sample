@@ -50,17 +50,17 @@ tagsButton.x = 160; tagsButton.y = 100
 
 -- START: Get Ids button
 
-function IdsAvailable(userID, pushToken)
+function IdsAvailable(userId, pushToken)
     print("userId:" .. userId)
     if (pushToken) then -- nil if there was a connection issue or on iOS notification permissions were not accepted.
         print("pushToken:" .. pushToken)
     end
     
-    native.showAlert("Ids", "userId: " .. userID .. "\n\n" .. "pushToken: " .. (pushToken or "nil"), {"Ok"});
+    native.showAlert("Ids", "userId: " .. userId .. "\n\n" .. "pushToken: " .. (pushToken or "nil"), {"Ok"});
 end
 
 local buttonHandlerGetIds = function( event )
-	OneSignal.IdsAvailableCallback(IdsAvailable)
+    OneSignal.IdsAvailableCallback(IdsAvailable)
 end
 
 local getIdsButton = widget.newButton
