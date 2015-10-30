@@ -5,15 +5,15 @@ print("START!")
 -- This function gets called when the user opens a notification or one is received when the app is open and active.
 -- Change the code below to fit your app's needs.
 function DidReceiveRemoteNotification(message, additionalData, isActive)
+    print("OneSignal Notification opened: " .. message)
+    
     if (additionalData) then
         if (additionalData.discount) then
-            native.showAlert( "Discount!", message, { "OK" } )
+            native.showAlert("Discount!", message, { "OK" } )
             -- Take user to your app store
         elseif (additionalData.actionSelected) then -- Interactive notification button pressed
             native.showAlert("Button Pressed!", "ButtonID:" .. additionalData.actionSelected, { "OK"} )
         end
-    else
-        native.showAlert("OneSignal Message", message, { "OK" } )
     end
 end
 
@@ -24,7 +24,13 @@ local OneSignal = require("plugin.OneSignal")
 -- The logging levels are as follows: 0 = None, 1 = Errors, 2 = Warnings, 3 = Info, 4 = Debug, 5 = Verbose
 -- OneSignal.SetLogLevel(4, 4)
 
+-- TODO: Replace with your OneSignal AppID, Google Project number (for Android) before running.
 OneSignal.Init("b2f7f966-d8cc-11e4-bed1-df8f05be55ba", "703322744261", DidReceiveRemoteNotification)
+
+-- Show in app alert if a notification is received while your app is being used.
+-- Recommend removing this if your have an action based game, use isActive in DidReceiveRemoteNotification
+-- along with your own game logic to show your on in-app message when use isn't in the middle of playing. 
+OneSignal.EnableInAppAlertNotification(true)
 
 -- START: Tags button
 local buttonHandlerSendTags = function( event )
