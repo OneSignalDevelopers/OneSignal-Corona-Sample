@@ -6,6 +6,8 @@ print("START!")
 -- Change the code below to fit your app's needs.
 function DidReceiveRemoteNotification(message, additionalData, isActive)
     print("OneSignal Notification opened: " .. message)
+
+    native.showAlert("message:", message, { "OK" } )
     
     if (additionalData) then
         if (additionalData.discount) then
@@ -25,6 +27,7 @@ local OneSignal = require("plugin.OneSignal")
 -- OneSignal.SetLogLevel(4, 4)
 
 -- TODO: Replace with your OneSignal AppID, Google Project number (for Android) before running.
+OneSignal.DisableAutoRegister()
 OneSignal.Init("b2f7f966-d8cc-11e4-bed1-df8f05be55ba", "703322744261", DidReceiveRemoteNotification)
 
 -- Show in app alert if a notification is received while your app is being used.
@@ -66,6 +69,8 @@ function IdsAvailable(userId, pushToken)
 end
 
 local buttonHandlerGetIds = function( event )
+	print("buttonHandlerGetIds")
+	OneSignal.RegisterForNotifications()
     OneSignal.IdsAvailableCallback(IdsAvailable)
 end
 
