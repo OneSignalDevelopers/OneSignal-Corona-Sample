@@ -1,86 +1,73 @@
-local widget = require( "widget" )
+print("CORONA: Start main.lua")
 
-print("START!")
+local json = require "json"
+local composer = require "composer"
+local OneSignal = require ("plugin.OneSignal")
 
--- This function gets called when the user opens a notification or one is received when the app is open and active.
--- Change the code below to fit your app's needs.
-function DidReceiveRemoteNotification(message, additionalData, isActive)
-    print("OneSignal Notification opened: " .. message)
-    
-    if (additionalData) then
-        if (additionalData.discount) then
-            native.showAlert("Discount!", message, { "OK" } )
-            -- Take user to your app store
-        elseif (additionalData.actionSelected) then -- Interactive notification button pressed
-            native.showAlert("Button Pressed!", "ButtonID:" .. additionalData.actionSelected, { "OK"} )
-        end
-    end
+-- show default status bar (iOS)
+display.setStatusBar( display.DefaultStatusBar )
+
+-- NOTIFICATION OPENED CALLBACK
+-- This function gets called when the user opens a notification
+function NotificationOpenedHandler(message, additionalData, isActive)
+	-- Easy way to dump table to string, not necessary to access contents
+	local additionalDataString = nil
+	if (additionalData) then
+		additionalDataString = json.encode( additionalData )
+	end
+
+	-- Print all of the handler params
+	print("Corona Notification Opened!" ..
+	"\nNotification Message: " .. tostring(message) ..
+	"\nAdditional Date: " .. tostring(additionalDataString) ..
+	"\nIs Active: " .. tostring(isActive))
 end
 
-local OneSignal = require("plugin.OneSignal")
-
--- Will show popup dialogs when the device registers with Apple/Google and with OneSignal.
--- Errors will be shown as popups too if there are any issues.
--- The logging levels are as follows: 0 = None, 1 = Errors, 2 = Warnings, 3 = Info, 4 = Debug, 5 = Verbose
--- OneSignal.SetLogLevel(4, 4)
-
--- TODO: Replace with your OneSignal AppID, Google Project number (for Android) before running.
-OneSignal.Init("b2f7f966-d8cc-11e4-bed1-df8f05be55ba", "703322744261", DidReceiveRemoteNotification)
-
--- Show in app alert if a notification is received while your app is being used.
--- Recommend removing this if your have an action based game, use isActive in DidReceiveRemoteNotification
--- along with your own game logic to show your on in-app message when use isn't in the middle of playing. 
-OneSignal.EnableInAppAlertNotification(true)
-
--- START: Tags button
-local buttonHandlerSendTags = function( event )
-	OneSignal.SendTag("CoronaTag1", "value1")
-	OneSignal.SendTags({["CoronaTag2"] = "value2",["CoronaTag3"] = "value3"})
+-- IAM CLICK ACTION CALLBACK
+-- This function gets called when the user clicks on an IAM element
+function InAppMessagedClickHandler(actionTable)
+	-- Print all of the handler params from the actionTable
+	print("In App Message Clicked!" ..
+	"\nClick Name: " .. tostring( actionTable['click_name'] ) ..
+	"\nClick Url: " .. tostring( actionTable['click_url'] ) ..
+	"\nFirst Click: " .. tostring( actionTable['first_click']) ..
+	"\nCloses Message: " .. tostring( actionTable['closes_message']))
 end
 
-local tagsButton = widget.newButton
-{
-	id = "SendTags",
-	defaultFile = "buttonGray.png",
-	overFile = "buttonWhite.png",
-	label = "Send Tags",
-	font = native.systemFont,
-	labelColor =  { default={ 1, 1, 1 }},
-	fontSize = 28,
-	emboss = true,
-	onPress = buttonHandlerSendTags,
-}
-tagsButton.x = 160; tagsButton.y = 100
--- END: Tags button
-
-
--- START: Get Ids button
-
-function IdsAvailable(userId, pushToken)
-    print("userId:" .. userId)
-    if (pushToken) then -- nil if there was a connection issue or on iOS notification permissions were not accepted.
-        print("pushToken:" .. pushToken)
-    end
-    
-    native.showAlert("Ids", "userId: " .. userId .. "\n\n" .. "pushToken: " .. (pushToken or "nil"), {"Ok"});
+-- GET TRIGGER VALUE FOR KEY CALLBACK
+-- After the trigger value for an trigger key is received it is provided here with the corresponding key
+function GetTriggerValueForKeyHandler(key, value)
+	-- Print the key, value pair from obtaining the trigger value
+	print("Obtained Trigger Value for Key!" ..
+	"\nTrigger Key, Value: " .. tostring(key) .. ", " .. tostring(value))
 end
 
-local buttonHandlerGetIds = function( event )
-    OneSignal.IdsAvailableCallback(IdsAvailable)
+-- IAM PUBLIC METHODS
+-- Example showcase of IAM methods for public usage in Corona
+function ExampleInAppMessagingMethods()
+	-- Toggle showing of IAMs for the device
+	OneSignal.PauseInAppMessages(false)
+
+	-- Adding a single trigger, value pair or several at a time with a table
+	OneSignal.AddTrigger("trigger_1", "one")
+	local triggerTable = { ["trigger_2"] = "two", ["trigger_3"] = "three", ["trigger_4"] = "four" }
+	OneSignal.AddTriggers(triggerTable)
+
+	-- Removing a single trigger by key or removing several at a time with a table
+	OneSignal.RemoveTriggerForKey("trigger_4")
+	local removeTriggers = {"trigger_1", "trigger_3"}
+	OneSignal.RemoveTriggersForKeys(removeTriggers)
+
+	-- Getting a trigger's value by key and returning the key, value in a callback
+	OneSignal.GetTriggerValueForKey("trigger_2", GetTriggerValueForKeyHandler)
+	OneSignal.GetTriggerValueForKey("trigger_3", GetTriggerValueForKeyHandler)
 end
 
-local getIdsButton = widget.newButton
-{
-	id = "GetIds",
-	defaultFile = "buttonGray.png",
-	overFile = "buttonWhite.png",
-	label = "Get Ids",
-	font = native.systemFont,
-	labelColor =  { default={ 1, 1, 1 }},
-	fontSize = 28,
-	emboss = true,
-	onPress = buttonHandlerGetIds,
-}
-getIdsButton.x = 160; getIdsButton.y = 200
--- END: Get Ids button
+-- START OF LUA SCRIPT
+-- Replace with your AppId
+OneSignal.Init("5eb5a37e-b458-11e3-ac11-000c2940e62c", "714322744251", NotificationOpenedHandler)
+OneSignal.SetInAppMessageClickHandler(InAppMessagedClickHandler)
+ExampleInAppMessagingMethods()
 
+-- Go to view1 scene
+composer.gotoScene( "view1" )
