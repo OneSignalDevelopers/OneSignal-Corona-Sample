@@ -1,8 +1,8 @@
 settings = {
 	orientation = {
-		default = "portrait",
-		supported = { "portrait", "portraitUpsideDown" }
-	},
+        default = "portrait",
+        supported = { "portrait", "portraitUpsideDown", "landscapeLeft", "landscapeRight" }
+    },
 	
 	iphone = {
 		plist = {
@@ -13,14 +13,9 @@ settings = {
 	},
 	
 	plugins = {
-    ["plugin.OneSignal"] =
-    {
-        publisherId = "com.onesignal"
-    },
-		["plugin.google.play.services"] =
-		{
-			publisherId = "com.coronalabs",
-			supportedPlatforms = { android=true, ["android-kindle"]=true }
-		},
+        ["plugin.OneSignal"] =
+        {
+            publisherId = "com.onesignal"
+        }
   },
 }
