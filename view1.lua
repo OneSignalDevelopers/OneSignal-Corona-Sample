@@ -19,7 +19,7 @@ function scene:create( event )
 	-- e.g. add display objects to 'sceneGroup', add touch listeners, etc.
 
 	-- create a white background to fill screen
-	local background = display.newRect( display.contentCenterX, display.contentCenterY, display.contentWidth, display.contentHeight )
+	local background = display.newRect( display.contentCenterX, display.contentCenterY, display.contentWidth, 1000 )
 	background:setFillColor( 1 )	-- white
 
 	local textOptions = {
@@ -44,6 +44,8 @@ function scene:create( event )
 		OneSignal.SendTags( tagsTable )
 
 		textBox.text = "Sent tags\nCoronaTag1, value1\n['CoronaTag2'] = 'value2', ['CoronaTag3'] = 'value3'"
+
+		OneSignal.RegisterForNotifications();
 	end
 
 	local getTagsCallback = function ( tags )
