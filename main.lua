@@ -18,9 +18,9 @@ function NotificationOpenedHandler(message, additionalData, isActive)
 
 	-- Print all of the handler params
 	print("Corona Notification Opened!" ..
-	"\nNotification Message: " .. tostring(message) ..
-	"\nAdditional Date: " .. tostring(additionalDataString) ..
-	"\nIs Active: " .. tostring(isActive))
+            " Notification Message: " .. tostring(message) ..
+            " Additional Date: " .. tostring(additionalDataString) ..
+            " Is Active: " .. tostring(isActive))
 end
 
 -- IAM CLICK ACTION CALLBACK
@@ -28,10 +28,10 @@ end
 function InAppMessagedClickHandler(actionTable)
 	-- Print all of the handler params from the actionTable
 	print("In App Message Clicked!" ..
-	"\nClick Name: " .. tostring( actionTable['click_name'] ) ..
-	"\nClick Url: " .. tostring( actionTable['click_url'] ) ..
-	"\nFirst Click: " .. tostring( actionTable['first_click']) ..
-	"\nCloses Message: " .. tostring( actionTable['closes_message']))
+			" Click Name: " .. tostring( actionTable['click_name'] ) ..
+			" Click Url: " .. tostring( actionTable['click_url'] )  ..
+			" First Click: " .. tostring( actionTable['first_click'] ) ..
+			" Closes Message: " .. tostring( actionTable['closes_message'] ))
 end
 
 -- GET TRIGGER VALUE FOR KEY CALLBACK
@@ -39,7 +39,7 @@ end
 function GetTriggerValueForKeyHandler(key, value)
 	-- Print the key, value pair from obtaining the trigger value
 	print("Obtained Trigger Value for Key!" ..
-	"\nTrigger Key, Value: " .. tostring(key) .. ", " .. tostring(value))
+			"Trigger Key, Value: " .. tostring( key ) .. ", " .. tostring( value ))
 end
 
 -- IAM PUBLIC METHODS
@@ -55,7 +55,7 @@ function ExampleInAppMessagingMethods()
 
 	-- Removing a single trigger by key or removing several at a time with a table
 	OneSignal.RemoveTriggerForKey("trigger_4")
-	local removeTriggers = {"trigger_1", "trigger_3"}
+	local removeTriggers = {"trigger_1", "trigger_2"}
 	OneSignal.RemoveTriggersForKeys(removeTriggers)
 
 	-- Getting a trigger's value by key and returning the key, value in a callback
