@@ -18,9 +18,9 @@ function NotificationOpenedHandler(message, additionalData, isActive)
 
 	-- Print all of the handler params
 	print("Corona Notification Opened!" ..
-	"\nNotification Message: " .. tostring(message) ..
-	"\nAdditional Date: " .. tostring(additionalDataString) ..
-	"\nIs Active: " .. tostring(isActive))
+            " Notification Message: " .. tostring(message) ..
+            " Additional Date: " .. tostring(additionalDataString) ..
+            " Is Active: " .. tostring(isActive))
 end
 
 -- IAM CLICK ACTION CALLBACK
