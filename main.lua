@@ -19,7 +19,7 @@ function NotificationOpenedHandler(message, additionalData, isActive)
 	-- Print all of the handler params
 	print("Corona Notification Opened!" ..
             " Notification Message: " .. tostring(message) ..
-            " Additional Date: " .. tostring(additionalDataString) ..
+            " Additional Data: " .. tostring(additionalDataString) ..
             " Is Active: " .. tostring(isActive))
 end
 
