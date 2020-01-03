@@ -136,7 +136,7 @@ function scene:create( event )
 	getTagsButton.x = display.contentCenterX; getTagsButton.y = GetYSpacingFromButton(sendTagsButton, 12);
 	-- END: Get tags button
 
-	-- START: Get tags button
+	-- START: Post notification button
 	local postNotificationButton = widget.newButton(
 		{
 			label = "Post Notification",
@@ -153,7 +153,7 @@ function scene:create( event )
 	)
 	postNotificationButton:addEventListener( "tap", PostNotification )
 	postNotificationButton.x = display.contentCenterX; postNotificationButton.y = GetYSpacingFromButton(getTagsButton, 12);
-	-- END: Get tags button
+	-- END: Post notification button
 
 	-- START: Add trigger key text field
 	local addTriggerKeyTextField = native.newTextField( 24, 0, 130, 30 )
