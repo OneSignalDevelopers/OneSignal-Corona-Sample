@@ -11,13 +11,13 @@ display.setStatusBar( display.DefaultStatusBar )
 -- This function gets called when the user opens a notification
 function NotificationOpenedHandler(message, additionalData, isActive)
 	-- Easy way to dump table to string, not necessary to access contents
-	local additionalDataString = nil
+	local additionalDataString
 	if (additionalData) then
 		additionalDataString = json.encode( additionalData )
 	end
 
 	-- Print all of the handler params
-	print("Corona Notification Opened!" ..
+	print("Corona Notification Opened! " ..
             " Notification Message: " .. tostring(message) ..
             " Additional Data: " .. tostring(additionalDataString) ..
             " Is Active: " .. tostring(isActive))
@@ -27,7 +27,7 @@ end
 -- This function gets called when the user clicks on an IAM element
 function InAppMessagedClickHandler(actionTable)
 	-- Print all of the handler params from the actionTable
-	print("In App Message Clicked!" ..
+	print("In App Message Clicked! " ..
 			" Click Name: " .. tostring( actionTable['click_name'] ) ..
 			" Click Url: " .. tostring( actionTable['click_url'] )  ..
 			" First Click: " .. tostring( actionTable['first_click'] ) ..
@@ -38,7 +38,7 @@ end
 -- After the trigger value for an trigger key is received it is provided here with the corresponding key
 function GetTriggerValueForKeyHandler(key, value)
 	-- Print the key, value pair from obtaining the trigger value
-	print("Obtained Trigger Value for Key!" ..
+	print("Obtained Trigger Value for Key! " ..
 			"Trigger Key, Value: " .. tostring( key ) .. ", " .. tostring( value ))
 end
 

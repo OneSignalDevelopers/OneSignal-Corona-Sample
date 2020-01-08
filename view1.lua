@@ -18,10 +18,10 @@ function PostNotification()
 		local notification = {
 			["contents"] = {["en"] = "test"}
 		}
-		notification["include_player_ids"] = {userId }
+		notification["include_player_ids"] = { userId }
 
-		local additionalDataTable = {["item1"] = "value1", ["item2"] = "value2"};
-		notification["data"] = {["table1"] = additionalDataTable, ["bool1"] = false, ["double1"] = 5.4, ["int1"] = 6, ["string1"] = "value3"};
+--		local additionalDataTable = {["item1"] = "value1", ["item2"] = "value2"};
+--		notification["data"] = {["table1"] = additionalDataTable, ["bool1"] = false, ["double1"] = 5.4, ["int1"] = 6, ["string1"] = "value3"};
 
 		OneSignal.PostNotification(notification,
 			function(jsonData)
@@ -75,13 +75,16 @@ function scene:create( event )
 	end
 
 	local getTagsCallback = function ( tags )
-		local tagsString = json.encode(tags);
+		local tagsString
+		if (tags) then
+			tagsString = json.encode( tags )
+		end
 		textBox.text = tagsString
-		print("TAGS: " .. tagsString)
+		print("TAGS: " .. tostring(tagsString))
 	end
 
 	local buttonHandlerGetTags = function( event )
-		-- Send a single tag in key, value fashion
+		-- Get all tags associated with the current device
 		OneSignal.GetTags( getTagsCallback )
 	end
 
