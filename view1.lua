@@ -6,8 +6,34 @@ local OneSignal = require( "plugin.OneSignal" )
 
 local scene = composer.newScene()
 
+local pushTok
+local userId
+
 function GetYSpacingFromButton( button, padding )
 	return button.y + button.height + padding
+end
+
+function PostNotification()
+	if (pushTok) then
+		local notification = {
+			["contents"] = {["en"] = "test"}
+		}
+		notification["include_player_ids"] = { userId }
+
+--		local additionalDataTable = {["item1"] = "value1", ["item2"] = "value2"};
+--		notification["data"] = {["table1"] = additionalDataTable, ["bool1"] = false, ["double1"] = 5.4, ["int1"] = 6, ["string1"] = "value3"};
+
+		OneSignal.PostNotification(notification,
+			function(jsonData)
+				native.showAlert( "DEBUG", "POST OK!!!", { "OK" } )
+				print(json.encode(jsonData))
+			end,
+			function(jsonData)
+				native.showAlert( "DEBUG", "POST NOT OK!!!", { "OK" } )
+				print(json.encode(jsonData))
+			end
+		)
+	end
 end
 
 function scene:create( event )
@@ -49,13 +75,16 @@ function scene:create( event )
 	end
 
 	local getTagsCallback = function ( tags )
-		local tagsString = json.encode(tags);
+		local tagsString
+		if (tags) then
+			tagsString = json.encode( tags )
+		end
 		textBox.text = tagsString
-		print("TAGS: " .. tagsString)
+		print("TAGS: " .. tostring(tagsString))
 	end
 
 	local buttonHandlerGetTags = function( event )
-		-- Send a single tag in key, value fashion
+		-- Get all tags associated with the current device
 		OneSignal.GetTags( getTagsCallback )
 	end
 
@@ -110,12 +139,31 @@ function scene:create( event )
 	getTagsButton.x = display.contentCenterX; getTagsButton.y = GetYSpacingFromButton(sendTagsButton, 12);
 	-- END: Get tags button
 
+	-- START: Post notification button
+	local postNotificationButton = widget.newButton(
+		{
+			label = "Post Notification",
+			emboss = true,
+			shape = "roundedRect",
+			width = 280,
+			height = 40,
+			cornerRadius = 4,
+			fillColor = { default={ 0.9, 0.3, 0.3, 1 }, over={ 0.8, 0.3, 0.3, 1 } },
+			strokeColor = { default={ 0.9, 0.3, 0.3, 1 }, over={ 0.8, 0.3, 0.3, 1 } },
+			strokeWidth = 0,
+			labelColor = { default={ 1, 1, 1, 1 }, over={ 1, 1, 1, 1 } }
+		}
+	)
+	postNotificationButton:addEventListener( "tap", PostNotification )
+	postNotificationButton.x = display.contentCenterX; postNotificationButton.y = GetYSpacingFromButton(getTagsButton, 12);
+	-- END: Post notification button
+
 	-- START: Add trigger key text field
 	local addTriggerKeyTextField = native.newTextField( 24, 0, 130, 30 )
 	addTriggerKeyTextField.anchorX = 0
 	addTriggerKeyTextField.text = "key"
 	addTriggerKeyTextField.size = 16
-	addTriggerKeyTextField.y = GetYSpacingFromButton(getTagsButton, 12);
+	addTriggerKeyTextField.y = GetYSpacingFromButton(postNotificationButton, 12);
 	addTriggerKeyTextField:resizeHeightToFitFont()
 	-- END: Add trigger key text field
 
@@ -125,7 +173,7 @@ function scene:create( event )
 	addTriggerValueTextField.text = "value"
 	addTriggerValueTextField.size = 16
 	addTriggerValueTextField.x = addTriggerKeyTextField.width + 38
-	addTriggerValueTextField.y = GetYSpacingFromButton(getTagsButton, 12);
+	addTriggerValueTextField.y = GetYSpacingFromButton(postNotificationButton, 12);
 	addTriggerValueTextField:resizeHeightToFitFont()
 	-- END: Add trigger value text field
 
@@ -194,6 +242,14 @@ function scene:create( event )
 
 	-- Set texBox below lowest view element
 	textBox.y = GetYSpacingFromButton(removeTriggerButton, 0);
+
+	-- Creates a notification to be deliver to this device as a test.
+	local idsFunc = function(userID, pushToken)
+		pushTok = pushToken
+		userId = userID
+	end
+
+	OneSignal.IdsAvailableCallback(idsFunc)
 
 	-- all objects must be added to group (e.g. self.view)
 	sceneGroup:insert( background )
